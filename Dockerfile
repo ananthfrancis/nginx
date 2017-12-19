@@ -34,7 +34,7 @@ ADD nginx.conf /etc/nginx/
 
 # Expose ports
 EXPOSE 8080
-USER root
+chmod -R 775 /var/cache/
 # Set the default command to execute
 # when creating a new container
 CMD ["nginx", "-g", "daemon off;"]
