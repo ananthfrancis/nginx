@@ -37,4 +37,5 @@ RUN touch /var/run/nginx.pid && \
   chown -R www-data:www-data /var/cache/nginx
 
 USER www-data
-CMD ["nginx", "-g", "daemon off;"]
+VOLUME /var/www
+#CMD ["nginx", "-g", "daemon off;"]
