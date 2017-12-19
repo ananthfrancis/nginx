@@ -32,9 +32,9 @@ ADD nginx.conf /etc/nginx/
 # Append "daemon off;" to the beginning of the configuration
 #RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# Expose ports
-EXPOSE 8080
-RUN chmod -R 777 /var/cache/
-# Set the default command to execute
-# when creating a new container
+RUN touch /var/run/nginx.pid && \
+  chown -R www-data:www-data /var/run/nginx.pid && \
+  chown -R www-data:www-data /var/cache/nginx
+
+USER www-data
 CMD ["nginx", "-g", "daemon off;"]
