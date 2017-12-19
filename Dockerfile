@@ -5,7 +5,7 @@
 
 # Set the base image to Ubuntu
 ##FROM ubuntu
-FROM nginx
+FROM nginx:alpine
 # File Author / Maintainer
 MAINTAINER Ananth Francis
 
