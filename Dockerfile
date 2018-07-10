@@ -1,41 +1,9 @@
-############################################################
-# Dockerfile to build Nginx Installed Containers
-# Based on Ubuntu
-############################################################
-
-# Set the base image to Ubuntu
-##FROM ubuntu
 FROM nginx:stable
-# File Author / Maintainer
-MAINTAINER Ananth Francis
 
-# Install Nginx
-
-# Add application repository URL to the default sources
-##RUN echo "deb http://archive.ubuntu.com/ubuntu/ raring main universe" >> /etc/apt/sources.list
-
-# Update the repository
-##RUN apt-get update
-
-# Install necessary tools
-##RUN apt-get install -y nano wget dialog net-tools
-
-# Download and Install Nginx
-##RUN apt-get install -y nginx  
-
-# Remove the default Nginx configuration file
-RUN rm -v /etc/nginx/nginx.conf
-
-# Copy a configuration file from the current directory
-ADD nginx.conf /etc/nginx/
-
-# Append "daemon off;" to the beginning of the configuration
-#RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-
-RUN touch /var/run/nginx.pid && \
-  chown -R www-data:www-data /var/run/nginx.pid && \
-  chown -R www-data:www-data /var/cache/nginx
-
-USER www-data
-VOLUME /var/www
-#CMD ["nginx", "-g", "daemon off;"]
+# support running as arbitrary user which belogs to the root group
+RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
+# users are not allowed to listen on priviliged ports
+RUN sed -i.bak 's/listen\(.*\)80;/listen 8081;/' /etc/nginx/conf.d/default.conf
+EXPOSE 8081
+# comment user directive as master process is run as user in OpenShift anyhow
+RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
