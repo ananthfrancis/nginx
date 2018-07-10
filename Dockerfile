@@ -8,4 +8,4 @@ EXPOSE 8081
 # comment user directive as master process is run as user in OpenShift anyhow
 COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
-RUN gem install fluentd
+RUN gem install fluentd -v "~> 0.12.0" --no-ri --no-rdoc
