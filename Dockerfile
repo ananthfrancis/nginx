@@ -1,5 +1,5 @@
 FROM nginx:stable
-RUN apt-get update && apt-get install -y ruby-dev
+RUN apt-get update && apt-get install -y ruby-dev curl
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
 # users are not allowed to listen on priviliged ports
@@ -8,4 +8,5 @@ EXPOSE 8081
 # comment user directive as master process is run as user in OpenShift anyhow
 COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
-RUN gem install fluentd -v "~> 0.12.0" --no-ri --no-rdoc
+RUN curl -L https://toolbelt.treasuredata.com/sh/install-debian-stretch-td-agent2.sh | sh
+RUN /etc/init.d/td-agent restart
