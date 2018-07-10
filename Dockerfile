@@ -8,5 +8,4 @@ EXPOSE 8081
 # comment user directive as master process is run as user in OpenShift anyhow
 COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
-RUN curl -L https://toolbelt.treasuredata.com/sh/install-debian-stretch-td-agent2.sh | sh
-RUN /etc/init.d/td-agent restart
+RUN gem install fluentd --no-ri --no-rdoc
