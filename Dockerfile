@@ -1,5 +1,5 @@
 FROM nginx:stable
-RUN apt-get update && apt-get install ruby-dev
+RUN apt-get update && apt-get install -y ruby-dev
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
 # users are not allowed to listen on priviliged ports
