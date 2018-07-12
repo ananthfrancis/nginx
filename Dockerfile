@@ -22,7 +22,7 @@ RUN mkdir -p /var/log/fluent
 COPY fluentd.conf /etc/fluent/fluentd.conf
 # port monitor forward debug
 EXPOSE 24220   24224   24230
-RUN access.log /tmp/access.log
+RUN COPY access.log /tmp/access.log
 
 ENV LD_PRELOAD "/usr/lib/x86_64-linux-gnu/libjemalloc.so.1"
 CMD ["fluentd", "-c", "/etc/fluent/fluentd.conf"]
