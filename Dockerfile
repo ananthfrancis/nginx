@@ -1,6 +1,10 @@
 FROM nginx:stable
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get install -y curl libcurl4-openssl-dev ruby ruby-dev make
+RUN apt-get update -y && apt-get install -yy \
+      build-essential \
+      zlib1g-dev \
+      libjemalloc1 && \
+    gem install fluentd:0.12.23 
 
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
@@ -11,17 +15,10 @@ EXPOSE 8081
 COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 
-# install fluentd td-agent
-RUN curl -L https://toolbelt.treasuredata.com/sh/install-debian-stretch-td-agent2.sh | sh
+RUN mkdir -p /var/log/fluent
 
-# install fluentd plugins
-RUN /opt/td-agent/embedded/bin/fluent-gem install --no-ri --no-rdoc \
-    fluent-plugin-elasticsearch \
-    fluent-plugin-record-modifier \
-    fluent-plugin-exclude-filter
+# port monitor forward debug
+EXPOSE 24220   24224   24230
 
-
-# add conf
-ADD ./etc/fluentd /etc/fluentd
-
-CMD /etc/init.d/td-agent stop && /opt/td-agent/embedded/bin/fluentd -c /etc/fluentd/fluent.conf
+ENV LD_PRELOAD "/usr/lib/x86_64-linux-gnu/libjemalloc.so.1"
+CMD ["fluentd", "-c", "/etc/fluent/fluentd.conf"]
