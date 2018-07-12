@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get install -yy \
       ruby-dev \
       rubygems \
       libjemalloc1 && \
-    gem install fluentd
+    gem install fluentd && \
     fluent-gem install fluent-plugin-mongo
 
 # support running as arbitrary user which belogs to the root group
