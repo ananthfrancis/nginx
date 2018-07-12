@@ -7,6 +7,7 @@ RUN apt-get update -y && apt-get install -yy \
       rubygems \
       libjemalloc1 && \
     gem install fluentd
+    fluent-gem install fluent-plugin-mongo
 
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
@@ -18,7 +19,7 @@ COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 
 RUN mkdir -p /var/log/fluent
-
+RUN COPY fluentd.conf /etc/fluent/fluentd.conf
 # port monitor forward debug
 EXPOSE 24220   24224   24230
 
