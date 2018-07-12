@@ -3,6 +3,7 @@ RUN apt-get update && apt-get -y upgrade
 RUN apt-get update -y && apt-get install -yy \
       build-essential \
       zlib1g-dev \
+      rubygems \
       libjemalloc1 && \
     gem install fluentd:0.12.23 
 
