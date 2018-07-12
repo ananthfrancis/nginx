@@ -19,7 +19,7 @@ COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 
 RUN mkdir -p /var/log/fluent
-RUN COPY fluentd.conf /etc/fluent/fluentd.conf
+COPY fluentd.conf /etc/fluent/fluentd.conf
 # port monitor forward debug
 EXPOSE 24220   24224   24230
 
