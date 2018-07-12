@@ -1,5 +1,7 @@
 FROM nginx:stable
-RUN apt-get update && apt-get install -y ruby-dev curl git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev
+RUN apt-get update && apt-get -y upgrade
+RUN apt-get install -y curl libcurl4-openssl-dev ruby ruby-dev make
+
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
 # users are not allowed to listen on priviliged ports
@@ -8,8 +10,18 @@ EXPOSE 8081
 # comment user directive as master process is run as user in OpenShift anyhow
 COPY nginx.conf /etc/nginx/
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
-RUN curl -sSL https://get.rvm.io | bash -s stable
-RUN source ~/.bash_profile
-RUN rvm install ruby-2.1.4
-RUN rvm list
-RUN rvm use --default ruby-2.1.4
+
+# install fluentd td-agent
+RUN curl -L https://toolbelt.treasuredata.com/sh/install-debian-stretch-td-agent2.sh | sh
+
+# install fluentd plugins
+RUN /opt/td-agent/embedded/bin/fluent-gem install --no-ri --no-rdoc \
+    fluent-plugin-elasticsearch \
+    fluent-plugin-record-modifier \
+    fluent-plugin-exclude-filter
+
+
+# add conf
+ADD ./etc/fluentd /etc/fluentd
+
+CMD /etc/init.d/td-agent stop && /opt/td-agent/embedded/bin/fluentd -c /etc/fluentd/fluent.conf
