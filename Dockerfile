@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get install -yy \
       ruby-dev \
       rubygems \
       libjemalloc1 && \
-    gem install fluentd:0.12.23 
+    gem install fluentd
 
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
